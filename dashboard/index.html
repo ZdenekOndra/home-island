@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d1117">
+  <title>HomeIsland</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body data-page="home">
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="/">
+        <svg class="icon brand-mark" aria-hidden="true"><use href="assets/icons.svg#logo"></use></svg>
+        <span>HOMEISLAND</span>
+      </a>
+      <span class="host" id="hostname"></span>
+      <nav class="nav">
+        <a href="/" aria-current="page">Home</a>
+        <a href="status.html">Status</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" id="hero" data-state="unknown" aria-live="polite">
+      <div class="hero-main">
+        <div class="hero-label">Internet</div>
+        <div class="hero-value" id="wan-state">CHECKING…</div>
+        <div class="hero-sub" id="wan-sub">Waiting for monitoring data</div>
+      </div>
+      <dl class="hero-facts">
+        <div><dt>Local network</dt><dd id="lan-state">–</dd></div>
+        <div><dt>Local services</dt><dd id="svc-state">–</dd></div>
+        <div><dt>Uptime</dt><dd id="uptime">–</dd></div>
+      </dl>
+    </section>
+
+    <div class="notice" id="stale" hidden></div>
+
+    <section>
+      <h2>Services</h2>
+      <div class="cards" id="services">
+        <p class="muted">Loading services…</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Resources</h2>
+      <div class="meters" id="resources"></div>
+    </section>
+
+    <section id="env-section" hidden>
+      <h2>Environment</h2>
+      <div class="meters" id="environment"></div>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <span>Runs entirely on your local network. No cloud, no tracking.</span>
+    <span id="updated"></span>
+  </footer>
+</body>
+</html>

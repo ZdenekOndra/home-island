@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d1117">
+  <title>Status · HomeIsland</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body data-page="status">
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="/">
+        <svg class="icon brand-mark" aria-hidden="true"><use href="assets/icons.svg#logo"></use></svg>
+        <span>HOMEISLAND</span>
+      </a>
+      <span class="host" id="hostname"></span>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="status.html" aria-current="page">Status</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero hero-compact" id="hero" data-state="unknown" aria-live="polite">
+      <div class="hero-main">
+        <div class="hero-label">Internet</div>
+        <div class="hero-value" id="wan-state">CHECKING…</div>
+        <div class="hero-sub" id="wan-sub"></div>
+      </div>
+      <dl class="hero-facts">
+        <div><dt>Local network</dt><dd id="lan-state">–</dd></div>
+        <div><dt>Local services</dt><dd id="svc-state">–</dd></div>
+        <div><dt>Uptime</dt><dd id="uptime">–</dd></div>
+      </dl>
+    </section>
+
+    <div class="notice" id="stale" hidden></div>
+
+    <div class="columns">
+      <section>
+        <h2>Service checks</h2>
+        <div class="panel"><table class="list" id="checks"></table></div>
+      </section>
+      <section>
+        <h2>Containers</h2>
+        <div class="panel"><table class="list" id="containers"></table></div>
+      </section>
+      <section>
+        <h2>System</h2>
+        <div class="panel"><table class="list" id="system"></table></div>
+      </section>
+      <section>
+        <h2>Network</h2>
+        <div class="panel"><table class="list" id="network"></table></div>
+      </section>
+      <section>
+        <h2>Storage</h2>
+        <div class="panel"><table class="list" id="storage"></table></div>
+      </section>
+      <section>
+        <h2>Hardware</h2>
+        <div class="panel"><table class="list" id="hardware"></table></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="wrap foot">
+    <span>Run <code>homeisland audit</code> on the server for a full offline-readiness report.</span>
+    <span id="updated"></span>
+  </footer>
+</body>
+</html>

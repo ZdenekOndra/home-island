@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Service unavailable · HomeIsland</title>
+  <!-- Self-contained: this page is shown on other host names when their service is down. -->
+  <style>
+    :root { --bg: #0d1117; --panel: #161b22; --line: #262d36; --text: #e6edf3; --muted: #8b949e; --accent: #4cc2a4; }
+    @media (prefers-color-scheme: light) { :root { --bg: #f6f7f9; --panel: #fff; --line: #dde1e6; --text: #1c2128; --muted: #5d6670; --accent: #0f7b63; } }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--text);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif; padding: 16px; box-sizing: border-box; }
+    main { max-width: 520px; padding: 28px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+    h1 { font-size: 20px; margin: 12px 0 8px; }
+    p { margin: 8px 0; } .muted { color: var(--muted); font-size: 14px; }
+    code { background: var(--bg); padding: 1px 6px; border-radius: 4px; }
+    svg { width: 36px; height: 36px; color: var(--accent); }
+    a.button { display: inline-block; margin-top: 12px; padding: 9px 16px; border-radius: 8px; background: var(--accent);
+      color: #04120e; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+    <h1>This service is not responding</h1>
+    <p>It may be starting, stopped, or waiting for the data disk. Other HomeIsland services are not affected.</p>
+    <p class="muted">On the server, check it with <code>homeisland status</code> and <code>homeisland logs &lt;service&gt;</code>.</p>
+    <a class="button" href="{{placeholder "http.vars.dashboard_url"}}">Back to the dashboard</a>
+  </main>
+</body>
+</html>
