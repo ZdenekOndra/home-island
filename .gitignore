@@ -1,0 +1,34 @@
+# Real configuration and secrets never belong in this repository.
+.env
+*.env
+!.env.example
+secrets*
+/etc/
+/local/
+
+# Runtime data, datasets and backups
+*.zim
+*.zim.part
+*.pmtiles
+*.pmtiles.part
+*.mbtiles
+*.part
+homeisland-backup-*.tar.gz
+homeisland-backup-*.tar.gz.sha256
+*teleporter*.zip
+*.db
+*.sqlite
+*.sqlite3
+
+# Development
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+node_modules/
+.idea/
+.vscode/
+*.swp
+.DS_Store

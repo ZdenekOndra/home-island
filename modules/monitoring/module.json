@@ -1,0 +1,13 @@
+{
+  "name": "monitoring",
+  "title": "Monitoring",
+  "group": "core",
+  "core": true,
+  "host_only": true,
+  "description": "Host collector: CPU, RAM, temperatures, disks, SMART, containers, Internet and LAN state.",
+  "checks": [
+    {"name": "Monitoring", "type": "status", "max_age": 120}
+  ],
+  "external": ["TCP connect probes to HOMEISLAND_WAN_TARGETS to detect Internet state (no data is sent)"],
+  "resources": "~20 MB RAM, <1% CPU"
+}

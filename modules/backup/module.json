@@ -1,0 +1,10 @@
+{
+  "name": "backup",
+  "title": "Backup & Recovery",
+  "group": "core",
+  "core": true,
+  "host_only": true,
+  "description": "Daily verified configuration backups to the data disk or another mounted destination.",
+  "data_dirs": ["backups"],
+  "resources": "runs once a day"
+}

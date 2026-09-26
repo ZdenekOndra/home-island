@@ -1,0 +1,55 @@
+{
+  "name": "dns",
+  "title": "Local DNS (Pi-hole)",
+  "group": "core",
+  "core": true,
+  "description": "Pi-hole DNS server with local records under the HomeIsland domain. DHCP stays on the router.",
+  "state_dirs": [
+    "pihole"
+  ],
+  "hosts": {
+    "pihole": "pihole:80"
+  },
+  "links": [
+    {
+      "title": "Pi-hole",
+      "host": "pihole",
+      "path": "/admin/",
+      "icon": "shield",
+      "description": "DNS and ad blocking"
+    }
+  ],
+  "checks": [
+    {
+      "name": "Local DNS",
+      "type": "dns"
+    },
+    {
+      "name": "Pi-hole admin",
+      "type": "http",
+      "host": "pihole",
+      "path": "/admin/"
+    }
+  ],
+  "backup": [
+    "pihole"
+  ],
+  "backup_exclude": [
+    "pihole/pihole-FTL.db",
+    "pihole/pihole-FTL.db-*",
+    "pihole/listsCache",
+    "pihole/logs",
+    "pihole/*.log",
+    "pihole/config_backups",
+    "pihole/gravity_backups",
+    "pihole/gravity_old.db",
+    "pihole/migration_backup",
+    "pihole/*.lock",
+    "pihole/tls*"
+  ],
+  "external": [
+    "Upstream DNS servers (HOMEISLAND_DNS_UPSTREAMS) for non-local names",
+    "Blocklist downloads when gravity is updated"
+  ],
+  "resources": "~60 MB RAM"
+}

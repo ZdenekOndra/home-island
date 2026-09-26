@@ -1,0 +1,110 @@
+# HomeIsland core services.
+#
+# Do not run `docker compose` against this file directly; use the `homeisland`
+# CLI, which adds the enabled module fragments from modules/*/compose.yml and
+# the generated environment file (STATE_DIR/generated/compose.env).
+#
+# Core services must never depend on the data disk: if the large HDD is
+# missing, DNS and the dashboard keep running.
+
+name: homeisland
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  proxy:
+    image: caddy:2.11.4-alpine
+    restart: unless-stopped
+    user: "65534:65534"
+    read_only: true
+    cap_drop: [ALL]
+    # The caddy binary carries a file capability; exec fails unless it is in the bounding set.
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    logging: *logging
+    mem_limit: 128m
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+      XDG_DATA_HOME: /tmp/caddy-data
+      XDG_CONFIG_HOME: /tmp/caddy-config
+    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+    ports:
+      - "${HOMEISLAND_BIND_IP:?}:${HOMEISLAND_HTTP_PORT:?}:8080/tcp"
+    tmpfs:
+      - /tmp:size=16m
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_GENERATED_DIR:?}/caddy
+        target: /etc/caddy
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_GENERATED_DIR:?}/api
+        target: /srv/generated
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/status
+        target: /srv/status
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ./dashboard
+        target: /srv/dashboard
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  pihole:
+    image: pihole/pihole:2026.09.0
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+    logging: *logging
+    mem_limit: 256m
+    hostname: pihole
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+      FTLCONF_webserver_api_password: ${PIHOLE_WEB_PASSWORD:?run install.sh to generate secrets}
+      # Bridge networking: queries arrive from the Docker network, so listen on all.
+      FTLCONF_dns_listeningMode: ALL
+      FTLCONF_dns_upstreams: ${HOMEISLAND_DNS_UPSTREAMS:?}
+      # Load HomeIsland's generated local records from /etc/dnsmasq.d.
+      FTLCONF_misc_etc_dnsmasq_d: "true"
+      # The router stays the DHCP server; the host keeps its own clock.
+      FTLCONF_dhcp_active: "false"
+      FTLCONF_ntp_ipv4_active: "false"
+      FTLCONF_ntp_ipv6_active: "false"
+      FTLCONF_ntp_sync_active: "false"
+      # Keep the query database small to limit SSD writes.
+      FTLCONF_database_maxDBdays: ${HOMEISLAND_PIHOLE_QUERY_LOG_DAYS:?}
+    ports:
+      - "${HOMEISLAND_BIND_IP:?}:${HOMEISLAND_DNS_PORT:?}:53/udp"
+      - "${HOMEISLAND_BIND_IP:?}:${HOMEISLAND_DNS_PORT:?}:53/tcp"
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/pihole
+        target: /etc/pihole
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_GENERATED_DIR:?}/dnsmasq.d
+        target: /etc/dnsmasq.d
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_GENERATED_DIR:?}/dns
+        target: /etc/homeisland-dns
+        read_only: true
+        bind: {create_host_path: false}
+
+networks:
+  default:
+    name: homeisland

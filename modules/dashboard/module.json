@@ -1,0 +1,16 @@
+{
+  "name": "dashboard",
+  "title": "Dashboard",
+  "group": "core",
+  "core": true,
+  "description": "Offline web dashboard and reverse proxy for all local services (Caddy).",
+  "hosts": {"home": "@dashboard", "status": "@dashboard"},
+  "links": [
+    {"title": "System Status", "host": "status", "path": "/", "icon": "pulse", "description": "Resources, disks, containers"}
+  ],
+  "checks": [
+    {"name": "Dashboard", "type": "http", "host": "home", "path": "/", "contains": "HomeIsland"},
+    {"name": "Dashboard data", "type": "http", "host": "home", "path": "/api/services.json"}
+  ],
+  "resources": "~15 MB RAM"
+}
