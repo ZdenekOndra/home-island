@@ -1,0 +1,41 @@
+services:
+  library:
+    build:
+      context: ./modules/library
+    image: homeisland/library:local
+    restart: unless-stopped
+    user: "${HOMEISLAND_DATA_UID:?}:${HOMEISLAND_DATA_GID:?}"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    mem_limit: 384m
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+      LIBRARY_REINDEX_HOURS: ${HOMEISLAND_LIBRARY_REINDEX_HOURS:?}
+      LIBRARY_COLLECTIONS: "library=/data/library:index;3d-models=/data/3d-models:browse"
+    tmpfs:
+      - /tmp:size=64m
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/library
+        target: /index
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_DATA_DIR:?}/library
+        target: /data/library
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_DATA_DIR:?}/3d-models
+        target: /data/3d-models
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=5)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s

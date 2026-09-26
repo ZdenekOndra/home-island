@@ -1,0 +1,97 @@
+{
+  "name": "library",
+  "title": "Document library & search",
+  "group": "knowledge",
+  "description": "Browse and full-text search your own PDF, TXT, Markdown, HTML and EPUB files (SQLite FTS5). Read-only web access.",
+  "requires_data": true,
+  "data_dirs": [
+    "library",
+    "library/Emergency",
+    "library/Medical",
+    "library/Electrical",
+    "library/Electronics",
+    "library/Networking",
+    "library/Linux",
+    "library/Raspberry Pi",
+    "library/3D Printing",
+    "library/Vehicles",
+    "library/Generator",
+    "library/Heating",
+    "library/Plumbing",
+    "library/Construction",
+    "library/Food",
+    "library/Radio",
+    "library/Maps",
+    "library/Home Documentation",
+    "library/Manuals",
+    "library/Books",
+    "3d-models"
+  ],
+  "state_dirs": [
+    "library"
+  ],
+  "state_owner": "data",
+  "hosts": {
+    "library": "library:8080"
+  },
+  "links": [
+    {
+      "title": "Library",
+      "host": "library",
+      "path": "/",
+      "icon": "search",
+      "description": "Search offline documents"
+    },
+    {
+      "title": "Manuals",
+      "host": "library",
+      "path": "/browse/library/Manuals/",
+      "icon": "manual",
+      "description": "Device and appliance manuals"
+    },
+    {
+      "title": "Books",
+      "host": "library",
+      "path": "/browse/library/Books/",
+      "icon": "book",
+      "description": "E-books and references"
+    },
+    {
+      "title": "3D Models",
+      "host": "library",
+      "path": "/browse/3d-models/",
+      "icon": "cube",
+      "description": "Printable models"
+    }
+  ],
+  "checks": [
+    {
+      "name": "Library",
+      "type": "http",
+      "host": "library",
+      "path": "/"
+    },
+    {
+      "name": "Knowledge search",
+      "type": "http",
+      "host": "library",
+      "path": "/api/search?q=test",
+      "contains": "\"results\""
+    },
+    {
+      "name": "Library documents",
+      "type": "dataset",
+      "glob": "library/**/*.*",
+      "hint": "copy documents into DATA_DIR/library/<Category>/"
+    }
+  ],
+  "backup": [
+    "library"
+  ],
+  "resources": "~30 MB RAM idle; indexing PDFs uses one CPU core while it runs",
+  "notes": "Add documents to DATA_DIR/library/<Category>/ (or via the Samba 'library' share), then run: homeisland knowledge index",
+  "backup_exclude": [
+    "library/.index.lock",
+    "library/*.lock"
+  ]
+}
