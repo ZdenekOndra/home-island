@@ -1,0 +1,10 @@
+[Unit]
+Description=HomeIsland configuration backup
+Documentation=file://@HOMEISLAND_HOME@/docs/BACKUP.md
+After=docker.service
+
+[Service]
+Type=oneshot
+Nice=15
+IOSchedulingClass=idle
+ExecStart=/usr/bin/env python3 @HOMEISLAND_HOME@/homeisland backup --quiet
