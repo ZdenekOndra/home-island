@@ -1,0 +1,11 @@
+# Site-specific additions to the HomeIsland containers.
+# Copy to /etc/homeisland/compose.override.yml, adjust, then:
+#   sudo homeisland config validate && sudo homeisland apply
+#
+# Only reference services of modules that are enabled.
+
+services:
+  homeassistant:
+    devices:
+      # Use the stable /dev/serial/by-id/ path of your adapter (ls /dev/serial/by-id/).
+      - /dev/serial/by-id/usb-EXAMPLE_Zigbee_Adapter-if00-port0:/dev/ttyUSB0

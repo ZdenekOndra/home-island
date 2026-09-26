@@ -1,0 +1,27 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:12.1.20260915-010956
+    restart: unless-stopped
+    user: "${HOMEISLAND_DATA_UID:?}:${HOMEISLAND_DATA_GID:?}"
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    mem_limit: 1536m
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+      JELLYFIN_PublishedServerUrl: http://media.${HOMEISLAND_DOMAIN:?}
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/jellyfin/config
+        target: /config
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/jellyfin/cache
+        target: /cache
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_DATA_DIR:?}/media
+        target: /media
+        read_only: true
+        bind: {create_host_path: false}

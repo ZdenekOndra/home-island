@@ -1,0 +1,55 @@
+{
+  "name": "jellyfin",
+  "title": "Jellyfin media server",
+  "group": "media",
+  "description": "Streams your own movies, music and photos from the data disk.",
+  "requires_data": true,
+  "data_dirs": [
+    "media",
+    "media/movies",
+    "media/shows",
+    "media/music",
+    "media/photos"
+  ],
+  "state_dirs": [
+    "jellyfin/config",
+    "jellyfin/cache"
+  ],
+  "state_owner": "data",
+  "hosts": {
+    "media": "jellyfin:8096"
+  },
+  "links": [
+    {
+      "title": "Media",
+      "host": "media",
+      "path": "/",
+      "icon": "film",
+      "description": "Movies, music, photos"
+    }
+  ],
+  "checks": [
+    {
+      "name": "Media server",
+      "type": "http",
+      "host": "media",
+      "path": "/health",
+      "contains": "Healthy"
+    }
+  ],
+  "backup": [
+    "jellyfin/config"
+  ],
+  "backup_exclude": [
+    "jellyfin/config/metadata",
+    "jellyfin/config/log",
+    "jellyfin/config/cache",
+    "jellyfin/config/data/subtitles",
+    "jellyfin/config/data/transcodes"
+  ],
+  "external": [
+    "Metadata providers (TheMovieDb, MusicBrainz, ...) and plugin repository when online; disable them in the Jellyfin library settings for fully offline use"
+  ],
+  "resources": "~200-400 MB RAM idle; transcoding is CPU heavy on a Raspberry Pi, prefer direct play",
+  "notes": "Put media under DATA_DIR/media and open http://media.<domain> to create the admin account."
+}

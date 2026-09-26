@@ -1,0 +1,30 @@
+services:
+  samba:
+    image: ghcr.io/servercontainers/samba:smbd-only-a3.24.1-s4.23.8-r0
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    mem_limit: 256m
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+      ACCOUNT_homeisland: ${SAMBA_PASSWORD:?run install.sh to generate secrets}
+      UID_homeisland: ${HOMEISLAND_DATA_UID:?}
+      AVAHI_DISABLE: "true"
+      WSDD2_DISABLE: "true"
+      NETBIOS_DISABLE: "true"
+      FAIL_FAST: "true"
+      SAMBA_CONF_LOG_LEVEL: "1"
+      SAMBA_VOLUME_CONFIG_files: "[files]; path = /shares/files; valid users = homeisland; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_library: "[library]; path = /shares/library; valid users = homeisland; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_models: "[3d-models]; path = /shares/3d-models; valid users = homeisland; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_kiwix: "[kiwix]; path = /shares/kiwix; valid users = homeisland; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_maps: "[maps]; path = /shares/maps; valid users = homeisland; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_media: "[media]; path = /shares/media; valid users = homeisland; guest ok = no; read only = no; browseable = yes"
+    ports:
+      - "${HOMEISLAND_BIND_IP:?}:445:445/tcp"
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_DATA_DIR:?}
+        target: /shares
+        bind: {create_host_path: false}

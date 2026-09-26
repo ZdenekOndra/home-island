@@ -1,0 +1,19 @@
+{
+  "name": "homeassistant",
+  "title": "Home Assistant",
+  "group": "home",
+  "description": "Local home automation. Runs with host networking for device discovery; nothing else depends on it.",
+  "state_dirs": ["homeassistant"],
+  "hosts": {"ha": null},
+  "links": [
+    {"title": "Home Assistant", "url": "http://ha.{domain}:8123/", "icon": "house", "description": "Home automation"}
+  ],
+  "checks": [
+    {"name": "Home Assistant", "type": "http", "url": "http://{host_ip}:8123/manifest.json"}
+  ],
+  "backup": ["homeassistant"],
+  "backup_exclude": ["homeassistant/tts", "homeassistant/*.log", "homeassistant/*.log.*", "homeassistant/.cache"],
+  "external": ["Update checks, integrations and cloud features you configure in Home Assistant itself; opt-in analytics is off unless you enable it during onboarding"],
+  "resources": "~300-500 MB RAM",
+  "notes": "Open http://ha.<domain>:8123 to onboard. Home Assistant listens on port 8123 on all host interfaces (host networking)."
+}

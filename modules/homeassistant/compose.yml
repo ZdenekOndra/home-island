@@ -1,0 +1,19 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.9.3
+    restart: unless-stopped
+    # Host networking is required for mDNS/SSDP device discovery.
+    network_mode: host
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/homeassistant
+        target: /config
+        bind: {create_host_path: false}
+      - /etc/localtime:/etc/localtime:ro
+    # USB radios (Zigbee/Z-Wave): add `devices:` in /etc/homeisland/compose.override.yml
+    # (see docs/MODULES.md), not here.
