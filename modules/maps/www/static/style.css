@@ -1,0 +1,22 @@
+:root { --bg: #0d1117; --panel: #161b22; --line: #262d36; --text: #e6edf3; --muted: #8b949e; --accent: #4cc2a4; }
+@media (prefers-color-scheme: light) {
+  :root { --bg: #f6f7f9; --panel: #ffffff; --line: #dde1e6; --text: #1c2128; --muted: #5d6670; --accent: #0f7b63; }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { display: flex; flex-direction: column; background: var(--bg); color: var(--text);
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif; }
+.bar { display: flex; align-items: center; gap: 12px; padding: 8px 16px; background: var(--panel);
+  border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brand { color: var(--text); text-decoration: none; font-weight: 700; letter-spacing: .08em; font-size: 13px; margin-right: auto; }
+.brand span { color: var(--muted); font-weight: 500; letter-spacing: .02em; }
+.field { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+select, button { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 8px; font: inherit; }
+button { cursor: pointer; min-width: 36px; }
+#map { flex: 1; min-height: 0; }
+.message { position: absolute; inset: 64px 16px auto 16px; margin: 0 auto; max-width: 560px; padding: 16px 18px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.message h2 { margin: 0 0 8px; font-size: 16px; }
+.message code { background: var(--bg); padding: 1px 5px; border-radius: 4px; }
+@media (max-width: 560px) { .field span { display: none; } .bar { gap: 8px; padding: 8px; } }

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Maps · HomeIsland</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="/assets/vendor/pmtiles.js" defer></script>
+  <script src="/assets/vendor/basemaps.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="/" title="Maps home">HOMEISLAND <span>Maps</span></a>
+    <label class="field"><span>Map</span><select id="archive" aria-label="Map archive"></select></label>
+    <label class="field"><span>Labels</span>
+      <select id="lang" aria-label="Label language">
+        <option value="en">English</option>
+        <option value="cs">Čeština</option>
+        <option value="de">Deutsch</option>
+        <option value="sk">Slovenčina</option>
+        <option value="pl">Polski</option>
+        <option value="fr">Français</option>
+        <option value="es">Español</option>
+      </select>
+    </label>
+    <button id="theme" type="button" aria-label="Toggle light or dark map">◐</button>
+  </header>
+  <main id="map" aria-label="Map"></main>
+  <div id="message" class="message" hidden></div>
+</body>
+</html>

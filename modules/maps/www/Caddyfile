@@ -1,0 +1,42 @@
+# Static server for the offline map viewer. Tiles are read by the browser
+# with HTTP range requests straight from the .pmtiles files.
+{
+	auto_https off
+	admin off
+	persist_config off
+}
+
+:8080 {
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
+	}
+	encode gzip {
+		match {
+			header Content-Type text/*
+			header Content-Type application/javascript*
+			header Content-Type application/json*
+			header Content-Type text/javascript*
+		}
+	}
+
+	handle_path /assets/* {
+		root * /srv/data/assets
+		header Cache-Control "public, max-age=86400"
+		file_server
+	}
+
+	handle_path /tiles/* {
+		root * /srv/data
+		@hidden path /assets /assets/* /.*
+		respond @hidden 404
+		file_server browse
+	}
+
+	handle {
+		root * /srv/app/static
+		file_server
+	}
+}

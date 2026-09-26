@@ -1,0 +1,47 @@
+{
+  "name": "maps",
+  "title": "Offline maps",
+  "group": "maps",
+  "description": "Vector maps from PMTiles archives, rendered in the browser (MapLibre). No tile server, no rendering on the Pi.",
+  "requires_data": true,
+  "data_dirs": [
+    "maps"
+  ],
+  "hosts": {
+    "maps": "maps:8080"
+  },
+  "links": [
+    {
+      "title": "Maps",
+      "host": "maps",
+      "path": "/",
+      "icon": "map",
+      "description": "Offline vector maps"
+    }
+  ],
+  "checks": [
+    {
+      "name": "Maps",
+      "type": "http",
+      "host": "maps",
+      "path": "/"
+    },
+    {
+      "name": "Map viewer assets",
+      "type": "dataset",
+      "glob": "maps/assets/VERSION",
+      "hint": "run: homeisland maps assets"
+    },
+    {
+      "name": "Map datasets",
+      "type": "dataset",
+      "glob": "maps/*.pmtiles",
+      "hint": "run: homeisland maps download <region>"
+    }
+  ],
+  "external": [
+    "`homeisland maps assets` and `homeisland maps download` fetch data only when run manually"
+  ],
+  "resources": "~15 MB RAM (static file server)",
+  "notes": "Fetch the viewer assets and a region while online: homeisland maps assets && homeisland maps download cz"
+}
