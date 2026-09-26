@@ -1,0 +1,20 @@
+{
+  "name": "kiwix",
+  "title": "Kiwix (offline Wikipedia)",
+  "group": "knowledge",
+  "description": "Serves ZIM archives (Wikipedia, Wiktionary, Wikibooks, WikiMed, ...) from the data disk.",
+  "requires_data": true,
+  "data_dirs": ["kiwix"],
+  "state_dirs": ["kiwix"],
+  "hosts": {"wiki": "kiwix:8080"},
+  "links": [
+    {"title": "Wikipedia", "host": "wiki", "path": "/", "icon": "wiki", "description": "Offline encyclopedias and wikis"}
+  ],
+  "checks": [
+    {"name": "Wikipedia", "type": "http", "host": "wiki", "path": "/"},
+    {"name": "Wikipedia datasets", "type": "dataset", "glob": "kiwix/*.zim", "hint": "download ZIM files, then run: homeisland knowledge update"}
+  ],
+  "backup": ["kiwix"],
+  "resources": "~30-150 MB RAM depending on archives",
+  "notes": "Copy .zim files to DATA_DIR/kiwix, then run: homeisland knowledge update"
+}

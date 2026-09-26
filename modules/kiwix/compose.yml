@@ -1,0 +1,34 @@
+services:
+  kiwix:
+    image: ghcr.io/kiwix/kiwix-serve:3.8.2
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    mem_limit: 768m
+    environment:
+      TZ: ${HOMEISLAND_TZ:?}
+    entrypoint: ["/usr/local/bin/kiwix-serve"]
+    # The library file is rebuilt by `homeisland knowledge update` and
+    # reloaded automatically (--monitorLibrary); no restart is needed.
+    command: ["--port=8080", "--blockexternal", "--monitorLibrary", "--library", "/library/library.xml"]
+    volumes:
+      - type: bind
+        source: ${HOMEISLAND_STATE_DIR:?}/kiwix
+        target: /library
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${HOMEISLAND_DATA_DIR:?}/kiwix
+        target: /data
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
