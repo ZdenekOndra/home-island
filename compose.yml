@@ -86,6 +86,9 @@ services:
       FTLCONF_ntp_sync_active: "false"
       # Keep the query database small to limit SSD writes.
       FTLCONF_database_maxDBdays: ${HOMEISLAND_PIHOLE_QUERY_LOG_DAYS:?}
+    # Pi-hole's own log files stay in RAM (size-limited) to spare the SSD.
+    tmpfs:
+      - /var/log/pihole:size=32m,mode=0755
     ports:
       - "${HOMEISLAND_BIND_IP:?}:${HOMEISLAND_DNS_PORT:?}:53/udp"
       - "${HOMEISLAND_BIND_IP:?}:${HOMEISLAND_DNS_PORT:?}:53/tcp"
