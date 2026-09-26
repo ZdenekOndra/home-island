@@ -1,0 +1,18 @@
+[Unit]
+Description=Start HomeIsland services
+Documentation=file://@HOMEISLAND_HOME@/docs/ARCHITECTURE.md
+After=docker.service network-online.target local-fs.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+# Containers also restart on their own; this re-applies the configuration at boot
+# and starts modules whose data disk became available.
+ExecStart=/usr/bin/env python3 @HOMEISLAND_HOME@/homeisland start
+TimeoutStartSec=15min
+# Exit status 2: started, but modules needing the missing data disk were skipped.
+SuccessExitStatus=2
+
+[Install]
+WantedBy=multi-user.target
