@@ -1,0 +1,9 @@
+{
+  "name": "ups",
+  "title": "UPS monitoring (NUT)",
+  "group": "hardware",
+  "host_only": true,
+  "description": "Battery charge, runtime and status from a UPS managed by Network UPS Tools on the host.",
+  "resources": "negligible",
+  "notes": "Install and configure NUT on the host (see docs/HARDWARE.md). HomeIsland reads it with: upsc $HOMEISLAND_UPS_NAME"
+}

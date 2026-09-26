@@ -1,0 +1,10 @@
+{
+  "name": "fan",
+  "title": "Fan control (experimental)",
+  "group": "hardware",
+  "host_only": true,
+  "experimental": true,
+  "description": "Temperature-based PWM fan speed via the Linux sysfs PWM interface. Requires a proper driver circuit and fan power supply.",
+  "resources": "negligible",
+  "notes": "Read docs/HARDWARE.md first. A GPIO pin must never power a fan directly; 12 V fans need their own supply and a transistor/MOSFET or a fan driver board."
+}

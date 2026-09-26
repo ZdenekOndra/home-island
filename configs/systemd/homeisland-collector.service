@@ -1,0 +1,23 @@
+[Unit]
+Description=HomeIsland monitoring collector
+Documentation=file://@HOMEISLAND_HOME@/docs/ARCHITECTURE.md
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env python3 @HOMEISLAND_HOME@/homeisland collector
+Restart=always
+RestartSec=10
+Nice=10
+# Root is needed for smartctl, I2C, PWM and the Docker socket; limit everything else.
+ProtectSystem=full
+ProtectHome=read-only
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+
+[Install]
+WantedBy=multi-user.target

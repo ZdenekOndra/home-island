@@ -1,0 +1,9 @@
+{
+  "name": "bme280",
+  "title": "BME280 environment sensor",
+  "group": "hardware",
+  "host_only": true,
+  "description": "Rack temperature, humidity and pressure from a BME280 on I2C. The dashboard works normally without it.",
+  "resources": "negligible",
+  "notes": "Enable I2C (sudo raspi-config nonint do_i2c 0), wire the sensor to the I2C pins and check it with: i2cdetect -y 1. Address and bus: HOMEISLAND_BME280_ADDRESS / HOMEISLAND_BME280_BUS."
+}
