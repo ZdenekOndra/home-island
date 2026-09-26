@@ -126,7 +126,7 @@ attributes (reallocated, pending and uncorrectable sectors).
 
 | Data | Size |
 |---|---|
-| Container images (core + knowledge + maps) | ~0.8 GB on the SSD |
+| Container images (core + knowledge + maps) | ~0.6 GB on the SSD |
 | Pi-hole, search index, state | < 500 MB typically |
 | English Wikipedia with images (`wikipedia_en_all_maxi`) | ~100+ GB |
 | English Wikipedia without images (`nopic`) | ~50 GB |
