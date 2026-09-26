@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ShellCheck
+        run: shellcheck install.sh update.sh uninstall.sh scripts/*.sh
+      - name: Python syntax
+        run: python3 -m py_compile homeisland lib/homeisland/*.py lib/homeisland/sensors/*.py modules/library/app/library.py
+      - name: JSON syntax
+        run: for f in modules/*/module.json; do python3 -m json.tool "$f" > /dev/null || exit 1; done
+      - name: Repository hygiene (secrets, personal data, datasets)
+        run: scripts/check-repo.sh
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -W error::ResourceWarning -m unittest discover -s tests -t tests -v
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose files with every module enabled
+        run: |
+          export HOMEISLAND_DEV_MODULES="kiwix library maps samba homeassistant jellyfin bme280 ups fan"
+          eval "$(scripts/dev-env.sh "$RUNNER_TEMP/hi-all")"
+          ./homeisland config check
+          ./homeisland config validate
+      - name: Pinned images exist for arm64 and amd64
+        run: scripts/check-images.sh
+
+  smoke-test:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, compose]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start the core stack with knowledge and map modules
+        run: |
+          eval "$(scripts/dev-env.sh "$RUNNER_TEMP/hi")"
+          ./homeisland apply
+          sleep 30
+          ./homeisland collector --once
+      - name: Offline readiness test (local services only)
+        run: |
+          eval "$(scripts/dev-env.sh "$RUNNER_TEMP/hi")"
+          ./homeisland test offline
+          ./homeisland health
+      - name: Dashboard makes no external requests
+        run: |
+          curl -fsS -H 'Host: home.home.arpa' http://127.0.0.1:8088/ | grep -q HomeIsland
+          curl -fsSI -H 'Host: home.home.arpa' http://127.0.0.1:8088/ | grep -qi "content-security-policy: default-src 'self'"
+      - name: Backup and verify
+        run: |
+          eval "$(scripts/dev-env.sh "$RUNNER_TEMP/hi")"
+          ./homeisland backup
+          ./homeisland backup verify latest
+      - name: Logs on failure
+        if: failure()
+        run: docker ps -a && docker compose -p homeisland logs --tail 50
+      - name: Stop
+        if: always()
+        run: docker compose -p homeisland down --remove-orphans || true
